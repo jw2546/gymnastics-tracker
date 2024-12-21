@@ -1,1 +1,5 @@
-Number,Name,Event,Score
+Number,Name,Bars,Floor,Beam,Vault
+Bob Johnson,Bars,-,-,-,-
+Alice Smith,Bars,-,-,-,-
+Carol White,Bars,-,-,-,-
+101,Alice Smith,-,-,-,-

@@ -1,12 +1,16 @@
 import streamlit as st
 import pandas as pd
 import os
+import time
 
 st.set_page_config(layout="wide")
 
 # Define the paths to the CSV files
 registration_csv_path = "registration.csv"
 scores_csv_path = "scores.csv"
+
+# Define the password
+PASSWORD = "Lions"
 
 # Function to load data from CSV
 def load_data(file_path):
@@ -33,41 +37,69 @@ page = st.sidebar.radio("Go to", ["Enter Scores", "Display Scores", "View Result
 if page == "Enter Scores":
     st.title("Enter Scores")
 
-    if not st.session_state.competitors.empty:
-        competitors = st.session_state.competitors
+    # Password input
+    password = st.text_input("Enter Password", type="password")
 
-        # Select gymnast by number
-        gymnast_number = st.number_input("Enter Gymnast Number", min_value=competitors['Number'].min(), max_value=competitors['Number'].max())
-        selected_gymnast = competitors[competitors['Number'] == gymnast_number]
+    if password == PASSWORD:
+        if not st.session_state.competitors.empty:
+            competitors = st.session_state.competitors
 
-        if not selected_gymnast.empty:
-            st.write(selected_gymnast)
+            # Select gymnast by number
+            gymnast_number = st.number_input("Enter Gymnast Number", min_value=competitors['Number'].min(), max_value=competitors['Number'].max())
+            selected_gymnast = competitors[competitors['Number'] == gymnast_number]
 
-            # Select event
-            event = st.selectbox("Select Event", ["Bars", "Floor", "Beam", "Vault"])
+            if not selected_gymnast.empty:
+                st.write(selected_gymnast)
 
-            # Enter score
-            score = st.number_input("Enter Score", min_value=0.0, max_value=10.0, step=0.1)
+                # Select event
+                event = st.selectbox("Select Event", ["Bars", "Floor", "Beam", "Vault"])
 
-            if st.button("Submit Score"):
-                new_score = pd.DataFrame({'Number': [gymnast_number], 'Name': [selected_gymnast['Name'].values[0]], 'Event': [event], 'Score': [score]})
-                st.session_state.scores = pd.concat([st.session_state.scores, new_score], ignore_index=True)
-                save_data(st.session_state.scores, scores_csv_path)
+                # Enter score
+                score = st.number_input("Enter Score", min_value=0.0, max_value=10.0, step=0.1)
 
-                st.success("Score submitted successfully!")
+                # Check if score already exists for the gymnast and event
+                existing_score = st.session_state.scores[
+                    (st.session_state.scores['Number'] == gymnast_number) & 
+                    (st.session_state.scores['Event'] == event)
+                ]
+
+                if not existing_score.empty:
+                    overwrite = st.checkbox("A score already exists for this gymnast and event. Check to overwrite it.")
+                    if overwrite and st.button("Submit Score"):
+                        st.session_state.scores = st.session_state.scores[
+                            ~((st.session_state.scores['Number'] == gymnast_number) & 
+                              (st.session_state.scores['Event'] == event))
+                        ]
+                        new_score = pd.DataFrame({'Number': [gymnast_number], 'Name': [selected_gymnast['Name'].values[0]], 'Event': [event], 'Score': [score]})
+                        st.session_state.scores = pd.concat([st.session_state.scores, new_score], ignore_index=True)
+                        save_data(st.session_state.scores, scores_csv_path)
+                        st.success("Score submitted successfully!")
+                else:
+                    if st.button("Submit Score"):
+                        new_score = pd.DataFrame({'Number': [gymnast_number], 'Name': [selected_gymnast['Name'].values[0]], 'Event': [event], 'Score': [score]})
+                        st.session_state.scores = pd.concat([st.session_state.scores, new_score], ignore_index=True)
+                        save_data(st.session_state.scores, scores_csv_path)
+                        st.success("Score submitted successfully!")
+        else:
+            st.write("No registration data found. Please ensure the registration CSV is in the repository.")
     else:
-        st.write("No registration data found. Please ensure the registration CSV is in the repository.")
+        st.error("Incorrect password. Please try again.")
 
 if page == "Display Scores":
-    if 'score_queue' not in st.session_state:
-        st.session_state.score_queue = []
+    if 'current_score' not in st.session_state:
+        st.session_state.current_score = None
+        st.session_state.last_display_time = 0
 
     if not st.session_state.scores.empty:
-        st.session_state.score_queue = st.session_state.scores.to_dict('records')
+        new_scores = st.session_state.scores.to_dict('records')
 
-    if st.session_state.score_queue:
-        while st.session_state.score_queue:
-            current_score = st.session_state.score_queue.pop(0)
+        if new_scores:
+            current_time = time.time()
+            if st.session_state.current_score is None or (current_time - st.session_state.last_display_time >= 20):
+                st.session_state.current_score = new_scores.pop(0)
+                st.session_state.last_display_time = current_time
+
+            current_score = st.session_state.current_score
             gymnast_name = current_score['Name']
             gymnast_number = current_score['Number']
             event = current_score['Event']
@@ -122,7 +154,9 @@ if page == "Display Scores":
                 unsafe_allow_html=True
             )
 
+            # Wait for 20 seconds before clearing the score
             time.sleep(20)
+            st.session_state.current_score = None
     else:
         st.write("No scores to display.")
 
