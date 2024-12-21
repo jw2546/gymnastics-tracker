@@ -1,5 +1,4 @@
 Number,Name,Bars,Floor,Beam,Vault
-Bob Johnson,Bars,-,-,-,-
-Alice Smith,Bars,-,-,-,-
-Carol White,Bars,-,-,-,-
-101,Alice Smith,-,-,-,-
+101,Bob Johnson,Bars,-,-,-,-
+102,Alice Smith,Bars,-,-,-,-
+103,Carol White,Bars,-,-,-,-
