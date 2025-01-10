@@ -1,13 +1,16 @@
 import streamlit as st
 import pandas as pd
+import sqlite3
 import time
 from datetime import datetime
 import pytz
 
-# Function to load the scores.csv file
+# Function to load the scores from the SQLite database
 def load_scores():
-    df = pd.read_csv('scores.csv')
-    return df  # Do not remove the first column
+    conn = sqlite3.connect('scores.db')
+    df = pd.read_sql_query("SELECT * FROM scores", conn)
+    conn.close()
+    return df
 
 # Streamlit app
 st.title('Gymnastics Meet Scores')
@@ -57,3 +60,4 @@ update_scores()
 while True:
     time.sleep(10)
     update_scores()
+    
