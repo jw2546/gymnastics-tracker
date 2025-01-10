@@ -1,12 +1,22 @@
 import streamlit as st
 import pandas as pd
+import sqlite3
 
-# Load the scores.csv file
-scores_df = pd.read_csv('scores.csv')
+# Function to load scores from the SQLite database
+def load_scores():
+    conn = sqlite3.connect('scores.db')
+    df = pd.read_sql_query("SELECT * FROM scores", conn)
+    conn.close()
+    return df
 
-# Function to save the updated DataFrame to CSV
+# Function to save the updated DataFrame to the SQLite database
 def save_scores(df):
-    df.to_csv('scores.csv', index=False)
+    conn = sqlite3.connect('scores.db')
+    df.to_sql('scores', conn, if_exists='replace', index=False)
+    conn.close()
+
+# Load the scores from the database
+scores_df = load_scores()
 
 # Streamlit app
 st.title('Gymnastics Meet Score Entry')
