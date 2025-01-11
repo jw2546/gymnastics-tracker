@@ -52,7 +52,7 @@ def main():
         if 'selected_event' not in st.session_state:
             st.session_state.selected_event = None
         if 'score_input' not in st.session_state:
-            st.session_state.score_input = None
+            st.session_state.score_input = 0.0
 
         # Dropdown to select gymnast number
         gymnast_number = st.selectbox('Select Gymnast Number', scores_df['Number'], key='gymnast_select')
@@ -66,7 +66,7 @@ def main():
 
         # Clear score input if gymnast or event changes
         if (st.session_state.selected_gymnast != gymnast_number) or (st.session_state.selected_event != event):
-            st.session_state.score_input = None
+            st.session_state.score_input = 0.0
 
         # Update selected gymnast and event in session state
         st.session_state.selected_gymnast = gymnast_number
@@ -86,8 +86,7 @@ def main():
                 st.write(scores_df)  # Debugging statement to display the updated DataFrame
                 save_scores(scores_df)
                 st.success('Score updated successfully!')
-                st.session_state.score_input = None  # Clear score input after confirmation
-                st.experimental_rerun()  # Rerun the app to clear the input box
+                st.session_state.score_input = 0.0  # Clear score input after confirmation
         else:
             if st.button('Confirm'):
                 scores_df.loc[scores_df['Number'] == gymnast_number, event] = score
@@ -95,8 +94,7 @@ def main():
                 st.write(scores_df)  # Debugging statement to display the updated DataFrame
                 save_scores(scores_df)
                 st.success('Score submitted successfully!')
-                st.session_state.score_input = None  # Clear score input after confirmation
-                st.experimental_rerun()  # Rerun the app to clear the input box
+                st.session_state.score_input = 0.0  # Clear score input after confirmation
 
     elif page == "v":
         st.header('Gymnastics Meet Scores')
