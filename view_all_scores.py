@@ -51,7 +51,7 @@ def update_scores():
     est = pytz.timezone('US/Eastern')
     current_time = datetime.now(est).strftime("%B %d, %-I:%M%p")
     last_update_placeholder.text(f"Last update: {current_time} EST")
-    scores_placeholder.dataframe(scores_df.reset_index(drop=True))  # Reset the index
+    scores_placeholder.dataframe(scores_df.reset_index(drop=True), index=False)  # Reset the index and hide it
 
 # Initial load
 update_scores()
@@ -60,4 +60,3 @@ update_scores()
 while True:
     time.sleep(10)
     update_scores()
-    
