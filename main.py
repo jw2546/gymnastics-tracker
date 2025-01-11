@@ -57,7 +57,7 @@ def main():
         event = st.selectbox('Select Event', ['Bars', 'Floor', 'Beam', 'Vault'])
 
         # Input box for score
-        score = st.number_input('Enter Score (0-10.00)', min_value=0.0, max_value=10.0, step=0.1)
+        score = st.number_input('Enter Score (0-10.00)', min_value=0.0, max_value=10.0, step=0.1, value=None)
 
         # Check if there's already a score
         existing_score = scores_df.loc[scores_df['Number'] == gymnast_number, event].values[0]
