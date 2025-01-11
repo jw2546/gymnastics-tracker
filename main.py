@@ -7,7 +7,13 @@ def main():
     # Get the URL parameters
     query_params = st.experimental_get_query_params()
     st.write("Query Params:", query_params)  # Debugging statement
-    page = query_params.get("page", ["judge"])[0]
+
+    # Ensure the page parameter is correctly extracted
+    if "page" in query_params:
+        page = query_params["page"][0]
+    else:
+        page = "judge"
+    
     st.write("Page:", page)  # Debugging statement
 
     if page == "judge":
