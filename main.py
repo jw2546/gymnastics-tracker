@@ -45,7 +45,7 @@ def main():
     st.title('Gymnastics Meet App')
 
     # Get the URL parameters
-    query_params = st.query_params
+    query_params = st.query_params.to_dict()
     st.write("Query Params:", query_params)  # Debugging statement
 
     # Ensure the page parameter is correctly extracted
