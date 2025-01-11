@@ -5,7 +5,7 @@ def main():
     st.title('Gymnastics Meet App')
 
     # Get the URL parameters
-    query_params = st.query_params
+    query_params = st.experimental_get_query_params()
     st.write("Query Params:", query_params)  # Debugging statement
     page = query_params.get("page", ["judge"])[0]
     st.write("Page:", page)  # Debugging statement
