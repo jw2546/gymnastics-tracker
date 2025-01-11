@@ -49,16 +49,88 @@ def main():
     st.write("Query Params:", query_params)  # Debugging statement
 
     # Ensure the page parameter is correctly extracted
-    page = query_params.get("page", ["judge"])[0]
+    page = query_params.get("p", ["j"])[0]
     st.write("Page:", page)  # Debugging statement
 
-    if page == "judge":
+    if page == "j":
         st.header('Gymnastics Meet Score Entry')
-        st.write("This is the judge page.")
 
-    elif page == "view_all_scores":
+        # Load the scores from the database
+        scores_df = load_scores()
+
+        # Dropdown to select gymnast number
+        gymnast_number = st.selectbox('Select Gymnast Number', scores_df['Number'])
+
+        # Display the selected gymnast's name
+        gymnast_name = scores_df[scores_df['Number'] == gymnast_number]['Name'].values[0]
+        st.write(f'Gymnast Name: {gymnast_name}')
+
+        # Dropdown to select event
+        event = st.selectbox('Select Event', ['Bars', 'Floor', 'Beam', 'Vault'])
+
+        # Input box for score
+        score = st.number_input('Enter Score (0-10.00)', min_value=0.0, max_value=10.0, step=0.1)
+
+        # Check if there's already a score
+        existing_score = scores_df.loc[scores_df['Number'] == gymnast_number, event].values[0]
+
+        if existing_score != '':
+            st.warning(f'Existing score for {event}: {existing_score}')
+            if st.button('Confirm Replace'):
+                scores_df.loc[scores_df['Number'] == gymnast_number, event] = score
+                st.write("Updated DataFrame before saving:")
+                st.write(scores_df)  # Debugging statement to display the updated DataFrame
+                save_scores(scores_df)
+                st.success('Score updated successfully!')
+        else:
+            if st.button('Submit Score'):
+                scores_df.loc[scores_df['Number'] == gymnast_number, event] = score
+                st.write("Updated DataFrame before saving:")
+                st.write(scores_df)  # Debugging statement to display the updated DataFrame
+                save_scores(scores_df)
+                st.success('Score submitted successfully!')
+
+    elif page == "v":
         st.header('Gymnastics Meet Scores')
-        st.write("This is the view all scores page.")
+
+        # Custom CSS for white background and black text
+        st.markdown(
+            """
+            <style>
+            .main {
+                background-color: white;
+                color: black;
+            }
+            .stDataFrame {
+                border: 1px solid black;
+                color: black.
+            }
+            .css-1d391kg {
+                background-color: white;
+                color: black.
+            }
+            .css-1d391kg .stDataFrame {
+                border: 1px solid black.
+                color: black.
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+
+        # Display the scores
+        st.subheader('Current Scores')
+        global last_update_placeholder, scores_placeholder
+        last_update_placeholder = st.empty()
+        scores_placeholder = st.empty()
+
+        # Initial load
+        update_scores()
+
+        # Automatically update the scores every 10 seconds
+        while True:
+            time.sleep(10)
+            update_scores()
 
 # Run the main app
 if __name__ == "__main__":
