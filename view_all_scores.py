@@ -10,7 +10,6 @@ def load_scores():
     conn = sqlite3.connect('scores.db')
     df = pd.read_sql_query("SELECT * FROM scores", conn)
     conn.close()
-    print(df)  # Debugging statement to print the DataFrame
     return df
 
 # Streamlit app
