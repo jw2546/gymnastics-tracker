@@ -1,4 +1,4 @@
-    import streamlit as st
+import streamlit as st
 import pandas as pd
 import sqlite3
 import time
@@ -99,15 +99,15 @@ def main():
             }
             .stDataFrame {
                 border: 1px solid black;
-                color: black;
+                color: black.
             }
             .css-1d391kg {
                 background-color: white;
-                color: black;
+                color: black.
             }
             .css-1d391kg .stDataFrame {
-                border: 1px solid black;
-                color: black;
+                border: 1px solid black.
+                color: black.
             }
             </style>
             """,
