@@ -54,6 +54,24 @@ def main():
         if 'score_input' not in st.session_state:
             st.session_state.score_input = None
 
+        # Custom CSS to double the font sizes in the judge interface
+        st.markdown(
+            """
+            <style>
+            .stSelectbox label, .stNumberInput label, .stButton button {
+                font-size: 2em;
+            }
+            .stSelectbox div[data-baseweb="select"] {
+                font-size: 2em;
+            }
+            .stNumberInput input {
+                font-size: 2em;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+
         # Dropdown to select gymnast number
         gymnast_number = st.selectbox('Select Gymnast Number', scores_df['Number'], key='gymnast_select')
 
