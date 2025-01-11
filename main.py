@@ -46,18 +46,32 @@ def main():
         # Load the scores from the database
         scores_df = load_scores()
 
+        # State to keep track of selected gymnast and event
+        if 'selected_gymnast' not in st.session_state:
+            st.session_state.selected_gymnast = None
+        if 'selected_event' not in st.session_state:
+            st.session_state.selected_event = None
+
         # Dropdown to select gymnast number
-        gymnast_number = st.selectbox('Select Gymnast Number', scores_df['Number'])
+        gymnast_number = st.selectbox('Select Gymnast Number', scores_df['Number'], key='gymnast_select')
 
         # Display the selected gymnast's name
         gymnast_name = scores_df[scores_df['Number'] == gymnast_number]['Name'].values[0]
         st.write(f'Gymnast Name: {gymnast_name}')
 
         # Dropdown to select event
-        event = st.selectbox('Select Event', ['Bars', 'Floor', 'Beam', 'Vault'])
+        event = st.selectbox('Select Event', ['Bars', 'Floor', 'Beam', 'Vault'], key='event_select')
+
+        # Clear score input if gymnast or event changes
+        if (st.session_state.selected_gymnast != gymnast_number) or (st.session_state.selected_event != event):
+            st.session_state.score_input = None
+
+        # Update selected gymnast and event in session state
+        st.session_state.selected_gymnast = gymnast_number
+        st.session_state.selected_event = event
 
         # Input box for score
-        score = st.number_input('Enter Score (0-10.00)', min_value=0.0, max_value=10.0, step=0.1, value=None)
+        score = st.number_input('Enter Score (0-10.00)', min_value=0.0, max_value=10.0, step=0.1, value=st.session_state.get('score_input'))
 
         # Check if there's already a score
         existing_score = scores_df.loc[scores_df['Number'] == gymnast_number, event].values[0]
@@ -70,6 +84,7 @@ def main():
                 st.write(scores_df)  # Debugging statement to display the updated DataFrame
                 save_scores(scores_df)
                 st.success('Score updated successfully!')
+                st.session_state.score_input = None  # Clear score input after confirmation
         else:
             if st.button('Confirm'):
                 scores_df.loc[scores_df['Number'] == gymnast_number, event] = score
@@ -77,6 +92,7 @@ def main():
                 st.write(scores_df)  # Debugging statement to display the updated DataFrame
                 save_scores(scores_df)
                 st.success('Score submitted successfully!')
+                st.session_state.score_input = None  # Clear score input after confirmation
 
     elif page == "v":
         st.header('Gymnastics Meet Scores')
