@@ -160,7 +160,13 @@ def main():
                 border: 1px solid black.
                 color: black.
             }
-            table {
+            .stDataFrameGlideDataEditor table {
+                font-size: 2em !important;
+            }
+            .stDataFrameGlideDataEditor tbody tr td {
+                font-size: 2em !important;
+            }
+            .stDataFrameGlideDataEditor thead tr th {
                 font-size: 2em !important;
             }
             </style>
