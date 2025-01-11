@@ -51,6 +51,8 @@ def main():
             st.session_state.selected_gymnast = None
         if 'selected_event' not in st.session_state:
             st.session_state.selected_event = None
+        if 'score_input' not in st.session_state:
+            st.session_state.score_input = None
 
         # Dropdown to select gymnast number
         gymnast_number = st.selectbox('Select Gymnast Number', scores_df['Number'], key='gymnast_select')
@@ -71,7 +73,7 @@ def main():
         st.session_state.selected_event = event
 
         # Input box for score
-        score = st.number_input('Enter Score (0-10.00)', min_value=0.0, max_value=10.0, step=0.1, value=st.session_state.get('score_input'))
+        score = st.number_input('Enter Score (0-10.00)', min_value=0.0, max_value=10.0, step=0.1, value=st.session_state.score_input)
 
         # Check if there's already a score
         existing_score = scores_df.loc[scores_df['Number'] == gymnast_number, event].values[0]
@@ -85,6 +87,7 @@ def main():
                 save_scores(scores_df)
                 st.success('Score updated successfully!')
                 st.session_state.score_input = None  # Clear score input after confirmation
+                st.experimental_rerun()  # Rerun the app to clear the input box
         else:
             if st.button('Confirm'):
                 scores_df.loc[scores_df['Number'] == gymnast_number, event] = score
@@ -93,6 +96,7 @@ def main():
                 save_scores(scores_df)
                 st.success('Score submitted successfully!')
                 st.session_state.score_input = None  # Clear score input after confirmation
+                st.experimental_rerun()  # Rerun the app to clear the input box
 
     elif page == "v":
         st.header('Gymnastics Meet Scores')
