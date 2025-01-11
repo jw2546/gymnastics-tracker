@@ -19,18 +19,8 @@ def save_scores(df):
         df.to_sql('scores', conn, if_exists='replace', index=False)
         conn.close()
         st.write("Data saved successfully.")
-        log_to_console("Data saved successfully.")
     except Exception as e:
         st.write(f"An error occurred: {e}")
-        log_to_console(f"An error occurred: {e}")
-
-# Function to log messages to the browser console
-def log_to_console(message):
-    st.components.v1.html(f"""
-        <script>
-            console.log("{message}");
-        </script>
-    """, height=0)
 
 # Function to update the scores
 def update_scores():
@@ -46,11 +36,9 @@ def main():
 
     # Get the URL parameters
     query_params = st.query_params
-    st.write("Query Params:", query_params)  # Debugging statement
 
     # Ensure the page parameter is correctly extracted
     page = query_params.get("p", ["j"])[0]
-    st.write("Page:", page)  # Debugging statement
 
     if page == "j":
         st.header('Gymnastics Meet Score Entry')
