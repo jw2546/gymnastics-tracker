@@ -140,7 +140,7 @@ def main():
     elif page == "v":
         st.header('Gymnastics Meet Scores')
 
-        # Custom CSS for white background and black text
+        # Custom CSS for white background and black text and double text size in table
         st.markdown(
             """
             <style>
@@ -159,6 +159,9 @@ def main():
             .css-1d391kg .stDataFrame {
                 border: 1px solid black.
                 color: black.
+            }
+            table {
+                font-size: 2em !important;
             }
             </style>
             """,
