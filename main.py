@@ -74,6 +74,20 @@ def main():
             .st-bc {
                 height: 4rem !important;
             }
+            .st-emotion-cache-19cfm8f {
+                height: 4rem !important;
+            }
+            @media (max-width: 768px) {
+                .stNumberInput input {
+                    height: 4em !important;
+                }
+                .st-bc {
+                    height: 4rem !important;
+                }
+                .st-emotion-cache-19cfm8f {
+                    height: 4rem !important;
+                }
+            }
             </style>
             """,
             unsafe_allow_html=True
