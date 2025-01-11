@@ -62,7 +62,7 @@ def main():
         # Check if there's already a score
         existing_score = scores_df.loc[scores_df['Number'] == gymnast_number, event].values[0]
 
-        if existing_score != '':
+        if existing_score != '-' and existing_score != '':
             st.warning(f'Existing score for {event}: {existing_score}')
             if st.button('Confirm Replace'):
                 scores_df.loc[scores_df['Number'] == gymnast_number, event] = score
@@ -71,7 +71,7 @@ def main():
                 save_scores(scores_df)
                 st.success('Score updated successfully!')
         else:
-            if st.button('Submit Score'):
+            if st.button('Confirm'):
                 scores_df.loc[scores_df['Number'] == gymnast_number, event] = score
                 st.write("Updated DataFrame before saving:")
                 st.write(scores_df)  # Debugging statement to display the updated DataFrame
