@@ -46,9 +46,9 @@ def main():
 
     # Get the URL parameters
     query_params = st.query_params
-    st.write("Query Params:", query_params)  # Debugging statement
+    print("Query Params:", query_params)  # Debugging statement
     page = query_params.get("page", ["judge"])[0]
-    st.write("Page:", page)  # Debugging statement
+    print("Page:", page)  # Debugging statement
 
     if page == "judge":
         st.header('Gymnastics Meet Score Entry')
