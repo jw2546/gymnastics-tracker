@@ -71,6 +71,9 @@ def main():
                 font-size: 2em;
                 height: 4em !important;
             }
+            .st-bc {
+                height: 4rem !important;
+            }
             </style>
             """,
             unsafe_allow_html=True
