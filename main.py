@@ -54,12 +54,12 @@ def main():
         if 'score_input' not in st.session_state:
             st.session_state.score_input = None
 
-        # Custom CSS to set <p> to 2rem and input boxes twice their current height
+        # Custom CSS to set <p> to 2rem !important and input boxes twice their current height
         st.markdown(
             """
             <style>
             p {
-                font-size: 2rem;
+                font-size: 2rem !important;
             }
             .stSelectbox label, .stNumberInput label, .stButton button {
                 font-size: 2em;
@@ -69,7 +69,7 @@ def main():
             }
             .stNumberInput input {
                 font-size: 2em;
-                height: 4em;
+                height: 4em !important;
             }
             </style>
             """,
